@@ -1,0 +1,32 @@
+class Solution {
+ private:
+    int digitSum(int num) {
+        int sum = 0;
+        while (num > 0) {
+            sum += num % 10;
+            num /= 10;
+        }
+        return sum;
+    }
+ public:
+    int countLargestGroup(int n) {
+        unordered_map<int, int> groupCounts;
+        int maxSize = 0;
+
+        for (int i = 1; i <= n; ++i) {
+            int sum = digitSum(i);
+            groupCounts[sum]++;
+            maxSize = max(maxSize, groupCounts[sum]);
+        }
+
+        int count = 0;
+        for (auto& pair : groupCounts) {
+            if (pair.second == maxSize)
+                count++;
+        }
+
+        return count;
+    }
+
+ 
+};
