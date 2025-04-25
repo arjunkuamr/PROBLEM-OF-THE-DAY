@@ -1,0 +1,23 @@
+class Solution {
+public:
+    long long countInterestingSubarrays(vector<int>& nums, int modulo, int k) {
+        unordered_map<int,int>cnt;
+        cnt[0]=1;
+        long long ans=0;
+        int s=0;
+        for(int num:nums)
+        {
+            if(num%modulo==k)
+            {
+                s++;
+            }
+            ans+=cnt[(s-k+modulo)%modulo];
+            cnt[s%modulo]++;
+        }
+        return ans;
+
+
+
+        
+    }
+};
