@@ -1,0 +1,48 @@
+class Solution {
+public:
+    bool canAssign(int k, vector<int>& tasks, vector<int>& workers, int pills, int strength) {
+        multiset<int> available(workers.end() - k, workers.end());
+        int i = k - 1;
+        int pillsLeft = pills;
+
+        for (int j = k - 1; j >= 0; --j) {
+            int task = tasks[j];
+
+            auto it = available.lower_bound(task);
+            if (it != available.end()) {
+                // Worker without pill can do the task
+                available.erase(it);
+            } else {
+                if (pillsLeft == 0) return false;
+
+                // Try to find weakest worker who can do task with pill
+                it = available.lower_bound(task - strength);
+                if (it == available.end()) return false;
+
+                available.erase(it);
+                pillsLeft--;
+            }
+        }
+
+        return true;
+    }
+    int maxTaskAssign(vector<int>& tasks, vector<int>& workers, int pills, int strength) {
+        sort(tasks.begin(), tasks.end());
+        sort(workers.begin(), workers.end());
+
+        int low = 0, high = min((int)tasks.size(), (int)workers.size());
+        int answer = 0;
+
+        while (low <= high) {
+            int mid = (low + high) / 2;
+            if (canAssign(mid, tasks, workers, pills, strength)) {
+                answer = mid;
+                low = mid + 1;
+            } else {
+                high = mid - 1;
+            }
+        }
+
+        return answer;
+    }
+};
