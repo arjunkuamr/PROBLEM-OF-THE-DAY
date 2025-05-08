@@ -1,0 +1,42 @@
+class Solution {
+public:
+    int minTimeToReach(vector<vector<int>>& moveTime) {
+        int n = moveTime.size();
+        int m = moveTime[0].size();
+        vector<vector<int>> dist(n, vector<int>(m, INT_MAX));
+        dist[0][0] = 0;
+
+        // प्रायोरिटी क्यू: (समय, x, y)
+        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<>> pq;
+        pq.emplace(0, 0, 0);
+
+        // चार दिशाएँ: ऊपर, नीचे, बाएँ, दाएँ
+        int dirs[4][2] = {{0,1}, {1,0}, {0,-1}, {-1,0}};
+
+        while (!pq.empty()) {
+            auto [time, x, y] = pq.top();
+            pq.pop();
+
+            if (x == n - 1 && y == m - 1) {
+                return time;
+            }
+
+            if (time > dist[x][y]) continue;
+
+            for (auto& dir : dirs) {
+                int nx = x + dir[0];
+                int ny = y + dir[1];
+
+                if (nx >= 0 && nx < n && ny >= 0 && ny < m) {
+                    int newTime = max(moveTime[nx][ny], time) + 1;
+                    if (newTime < dist[nx][ny]) {
+                        dist[nx][ny] = newTime;
+                        pq.emplace(newTime, nx, ny);
+                    }
+                }
+            }
+        }
+
+        return -1; 
+    }
+};
