@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int minTimeToReach(vector<vector<int>>& moveTime) {
+         int m = moveTime.size();
+        int n = moveTime[0].size();
+        vector<vector<int>> dist(m, vector<int>(n, INT_MAX));
+        dist[0][0] = 0;
+
+        // Directions: up, right, down, left
+        vector<int> dir = {-1, 0, 1, 0, -1};
+
+        // Priority queue: (current time, row, col, next move cost)
+        using State = tuple<int, int, int, int>;
+        priority_queue<State, vector<State>, greater<>> pq;
+        pq.emplace(0, 0, 0, 1); // Start at (0,0) with time 0 and next move cost 1
+
+        while (!pq.empty()) {
+            auto [time, i, j, cost] = pq.top();
+            pq.pop();
+
+            if (i == m - 1 && j == n - 1) {
+                return time;
+            }
+
+            if (time > dist[i][j]) {
+                continue;
+            }
+
+            for (int d = 0; d < 4; ++d) {
+                int ni = i + dir[d];
+                int nj = j + dir[d + 1];
+
+                if (ni >= 0 && ni < m && nj >= 0 && nj < n) {
+                    int arrivalTime = max(time, moveTime[ni][nj]) + cost;
+                    if (arrivalTime < dist[ni][nj]) {
+                        dist[ni][nj] = arrivalTime;
+                        pq.emplace(arrivalTime, ni, nj, cost == 1 ? 2 : 1);
+                    }
+                }
+            }
+        }
+
+        return -1;
+    }
+};
