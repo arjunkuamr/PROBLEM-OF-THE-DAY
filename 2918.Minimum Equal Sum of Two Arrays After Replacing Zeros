@@ -1,0 +1,32 @@
+using ll = long long;
+class Solution {
+public:
+    long long minSum(vector<int>& nums1, vector<int>& nums2) {
+        ll sum1 = 0, sum2 = 0;
+        int c1 = 0, c2 = 0; //counting zeroes
+        for (auto n : nums1) {
+            if (n) {
+                sum1 += n;
+            } else {
+                sum1++;
+                c1++;
+            }
+        }
+        for (auto n : nums2) {
+            if (n) {
+                sum2 += n;
+            } else {
+                sum2++;
+                c2++;
+            }
+        }
+        if (sum1 == sum2) return sum1;
+        if (sum1 < sum2) {
+            if (c1) return sum2;
+            else return -1;
+        }
+        // sum1 > sum2
+        if (c2) return sum1;
+        return -1;
+    }
+};
