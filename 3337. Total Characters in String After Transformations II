@@ -1,0 +1,68 @@
+#include <iostream>
+#include <vector>
+#include <numeric>
+using namespace std;
+
+class Solution {
+public:
+    int lengthAfterTransformations(string s, int t, vector<int>& nums) {
+        const int MOD = 1'000'000'007;
+        const int ALPHABET_SIZE = 26;
+
+        // ट्रांसफॉर्मेशन मैट्रिक्स बनाना
+        vector<vector<int>> T(ALPHABET_SIZE, vector<int>(ALPHABET_SIZE, 0));
+        for (int i = 0; i < ALPHABET_SIZE; ++i) {
+            for (int step = 1; step <= nums[i]; ++step) {
+                T[i][(i + step) % ALPHABET_SIZE]++;
+            }
+        }
+
+        // मैट्रिक्स को t की शक्ति तक बढ़ाना
+        vector<vector<int>> poweredT = matrixPower(T, t, MOD);
+
+        // प्रारंभिक अक्षर गणना
+        vector<int> count(ALPHABET_SIZE, 0);
+        for (char c : s) {
+            count[c - 'a']++;
+        }
+
+        // अंतिम लंबाई की गणना
+        long long totalLength = 0;
+        for (int i = 0; i < ALPHABET_SIZE; ++i) {
+            for (int j = 0; j < ALPHABET_SIZE; ++j) {
+                totalLength = (totalLength + (long long)count[i] * poweredT[i][j]) % MOD;
+            }
+        }
+
+        return static_cast<int>(totalLength);
+    }
+
+private:
+    // मैट्रिक्स गुणा
+    vector<vector<int>> multiplyMatrices(const vector<vector<int>>& A, const vector<vector<int>>& B, int MOD) {
+        int size = A.size();
+        vector<vector<int>> result(size, vector<int>(size, 0));
+        for (int i = 0; i < size; ++i)
+            for (int k = 0; k < size; ++k)
+                for (int j = 0; j < size; ++j)
+                    result[i][j] = (result[i][j] + (long long)A[i][k] * B[k][j]) % MOD;
+        return result;
+    }
+
+    // मैट्रिक्स को t की शक्ति तक बढ़ाना
+    vector<vector<int>> matrixPower(vector<vector<int>> base, int exponent, int MOD) {
+        int size = base.size();
+        vector<vector<int>> result(size, vector<int>(size, 0));
+        // पहचान मैट्रिक्स बनाना
+        for (int i = 0; i < size; ++i)
+            result[i][i] = 1;
+
+        while (exponent > 0) {
+            if (exponent % 2 == 1)
+                result = multiplyMatrices(result, base, MOD);
+            base = multiplyMatrices(base, base, MOD);
+            exponent /= 2;
+        }
+        return result;
+    }
+};
