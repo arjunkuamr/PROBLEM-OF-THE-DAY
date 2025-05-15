@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<string> getLongestSubsequence(vector<string>& words, vector<int>& groups) {
+        vector<string> result;
+
+        if (words.empty()) return result;
+
+        // पहले element को subsequence में डाल देते हैं
+        result.push_back(words[0]);
+        int prevGroup = groups[0];
+
+        // आगे के elements को check करेंगे
+        for (int i = 1; i < words.size(); ++i) {
+            if (groups[i] != prevGroup) {
+                result.push_back(words[i]);
+                prevGroup = groups[i]; // update last included group
+            }
+        }
+
+        return result;
+    }
+};
