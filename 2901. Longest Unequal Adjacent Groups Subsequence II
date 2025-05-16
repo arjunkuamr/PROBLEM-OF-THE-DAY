@@ -1,0 +1,48 @@
+class Solution {
+public:
+    // Helper function to check if two words have Hamming distance = 1
+    bool isValid(const string& a, const string& b) {
+        if (a.size() != b.size()) return false;
+        int diff = 0;
+        for (int i = 0; i < a.size(); i++) {
+            if (a[i] != b[i]) diff++;
+            if (diff > 1) return false;
+        }
+        return diff == 1;
+    }
+
+    vector<string> getWordsInLongestSubsequence(vector<string>& words, vector<int>& groups) {
+        int n = words.size();
+        vector<vector<string>> dp(n); // dp[i] stores best subsequence ending at i
+
+        for (int i = 0; i < n; ++i) {
+            dp[i] = {words[i]}; // start with only this word
+
+            for (int j = 0; j < i; ++j) {
+                // Check both conditions:
+                // 1. Group values are different
+                // 2. Hamming distance is exactly 1
+                if (groups[i] != groups[j] && isValid(words[j], words[i])) {
+                    auto candidate = dp[j];
+                    candidate.push_back(words[i]);
+
+                    if (candidate.size() > dp[i].size() ||
+                        (candidate.size() == dp[i].size() && candidate > dp[i])) {
+                        dp[i] = candidate;
+                    }
+                }
+            }
+        }
+
+        // Find the best sequence among all dp[i]
+        vector<string> best;
+        for (int i = 0; i < n; ++i) {
+            if (dp[i].size() > best.size() ||
+                (dp[i].size() == best.size() && dp[i] > best)) {
+                best = dp[i];
+            }
+        }
+
+        return best;
+    }
+};
