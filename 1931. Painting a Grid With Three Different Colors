@@ -1,0 +1,69 @@
+class Solution {
+public:
+    const int MOD = 1e9 + 7;
+
+    // Saare valid row coloring patterns generate karo (adjacent cells same na ho)
+    void generatePatterns(int m, vector<vector<int>>& patterns, vector<int>& curr) {
+        if (curr.size() == m) {
+            patterns.push_back(curr);
+            return;
+        }
+        for (int color = 1; color <= 3; color++) {
+            if (curr.empty() || curr.back() != color) {
+                curr.push_back(color);
+                generatePatterns(m, patterns, curr);
+                curr.pop_back();
+            }
+        }
+    }
+
+    // Check karo ki 2 patterns compatible hain ya nahi (i.e., same column me same color na ho)
+    bool isCompatible(const vector<int>& a, const vector<int>& b) {
+        for (int i = 0; i < a.size(); i++) {
+            if (a[i] == b[i]) return false;
+        }
+        return true;
+    }
+
+    int colorTheGrid(int m, int n) {
+        vector<vector<int>> patterns;
+        vector<int> curr;
+
+        // Step 1: Sab valid patterns generate karo ek row ke liye
+        generatePatterns(m, patterns, curr);
+        int P = patterns.size();  // Total valid row patterns
+
+        // Step 2: Compatible pattern mapping banao
+        vector<vector<int>> compatible(P);
+        for (int i = 0; i < P; i++) {
+            for (int j = 0; j < P; j++) {
+                if (isCompatible(patterns[i], patterns[j])) {
+                    compatible[i].push_back(j);
+                }
+            }
+        }
+
+        // Step 3: DP lagao — dp[i] = current column me pattern i ke total ways
+        vector<long long> dp(P, 1); // first column ke liye har pattern ka 1 way
+
+        for (int col = 1; col < n; col++) {
+            vector<long long> new_dp(P, 0);
+
+            for (int i = 0; i < P; i++) {
+                for (int j : compatible[i]) {
+                    new_dp[j] = (new_dp[j] + dp[i]) % MOD;
+                }
+            }
+
+            dp = new_dp;
+        }
+
+        // Step 4: Result = sab pattern ke ways ka total
+        long long result = 0;
+        for (long long val : dp) {
+            result = (result + val) % MOD;
+        }
+
+        return (int)result;
+    }
+};
