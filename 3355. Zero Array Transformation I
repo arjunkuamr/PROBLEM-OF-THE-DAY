@@ -1,0 +1,31 @@
+#include <vector>
+#include <numeric> // for partial_sum
+using namespace std;
+
+class Solution {
+public:
+    bool isZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        int n = nums.size();
+        vector<int> diffs(n + 1, 0);
+
+        // Apply each query to the difference array
+        for (const auto& q : queries) {
+            int l = q[0], r = q[1];
+            diffs[l] += 1;
+            if (r + 1 < n) {
+                diffs[r + 1] -= 1;
+            }
+        }
+
+        // Calculate the prefix sum to get the cumulative decrements
+        int cumulative_decrement = 0;
+        for (int i = 0; i < n; ++i) {
+            cumulative_decrement += diffs[i];
+            if (nums[i] > cumulative_decrement) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+};
