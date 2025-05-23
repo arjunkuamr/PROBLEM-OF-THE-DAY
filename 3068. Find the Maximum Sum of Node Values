@@ -1,0 +1,31 @@
+#include <vector>
+#include <algorithm>
+#include <climits>
+using namespace std;
+
+class Solution {
+public:
+    long long maximumValueSum(vector<int>& nums, int k, vector<vector<int>>& edges) {
+        long long totalSum = 0;
+        int beneficialChanges = 0;
+        int minDifference = INT_MAX;
+
+        for (int num : nums) {
+            int xorValue = num ^ k;
+            if (xorValue > num) {
+                totalSum += xorValue;
+                beneficialChanges++;
+                minDifference = min(minDifference, xorValue - num);
+            } else {
+                totalSum += num;
+                minDifference = min(minDifference, num - xorValue);
+            }
+        }
+
+        if (beneficialChanges % 2 == 0) {
+            return totalSum;
+        } else {
+            return totalSum - minDifference;
+        }
+    }
+};
