@@ -1,0 +1,52 @@
+class Solution {
+private:
+    // DFS to count reachable nodes within given depth
+    int dfs(vector<vector<int>>& graph, int node, int depth, vector<bool>& visited) {
+        if (depth < 0 || visited[node]) return 0;
+        visited[node] = true;
+        int count = 1;
+        for (int neighbor : graph[node]) {
+            count += dfs(graph, neighbor, depth - 1, visited);
+        }
+        return count;
+    }
+public:
+    vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2, int k) {
+        int n = edges1.size() + 1;
+        int m = edges2.size() + 1;
+
+        vector<vector<int>> g1(n), g2(m);
+
+        // Tree 1 बनाना
+        for (auto& e : edges1) {
+            g1[e[0]].push_back(e[1]);
+            g1[e[1]].push_back(e[0]);
+        }
+
+        // Tree 2 बनाना
+        for (auto& e : edges2) {
+            g2[e[0]].push_back(e[1]);
+            g2[e[1]].push_back(e[0]);
+        }
+
+        // Step 1: Tree 2 में हर नोड से DFS चलाओ और पता लगाओ max reachable in <= k-1 depth
+        int maxFromTree2 = 0;
+        for (int i = 0; i < m; i++) {
+            vector<bool> visited(m, false);
+            int count = dfs(g2, i, k - 1, visited);
+            maxFromTree2 = max(maxFromTree2, count);
+        }
+
+        // Step 2: Tree 1 के हर नोड से DFS चलाओ और answer[i] में store करो
+        vector<int> ans(n);
+        for (int i = 0; i < n; i++) {
+            vector<bool> visited(n, false);
+            int count = dfs(g1, i, k, visited);
+            ans[i] = count + maxFromTree2;
+        }
+
+        return ans;
+    }
+
+
+};
