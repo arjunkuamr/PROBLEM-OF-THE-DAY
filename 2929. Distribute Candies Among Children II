@@ -1,0 +1,36 @@
+#include <iostream>
+using namespace std;
+
+class Solution {
+public:
+    long long nCk(int n, int k) {
+        if (k < 0 || k > n) return 0;
+        long long res = 1;
+        for (int i = 1; i <= k; ++i) {
+            res = res * (n - i + 1) / i;
+        }
+        return res;
+    }
+
+    long long distributeCandies(int n, int limit) {
+        // कुल वितरणों की संख्या बिना किसी प्रतिबंध के
+        long long total = nCk(n + 2, 2);
+
+        // उन वितरणों को घटाएं जहाँ एक बच्चा limit से अधिक कैंडीज़ प्राप्त करता है
+        if (n > limit) {
+            total -= 3 * nCk(n - limit + 1, 2);
+        }
+
+        // उन वितरणों को जोड़ें जहाँ दो बच्चों को limit से अधिक कैंडीज़ मिलती हैं
+        if (n > 2 * limit) {
+            total += 3 * nCk(n - 2 * limit, 2);
+        }
+
+        // उन वितरणों को घटाएं जहाँ तीनों बच्चों को limit से अधिक कैंडीज़ मिलती हैं
+        if (n > 3 * limit) {
+            total -= nCk(n - 3 * limit - 1, 2);
+        }
+
+        return total;
+    }
+};
