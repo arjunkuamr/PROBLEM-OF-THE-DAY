@@ -1,0 +1,54 @@
+class Solution {
+public:
+    int maxCandies(vector<int>& status, vector<int>& candies,
+                   vector<vector<int>>& keys, vector<vector<int>>& containedBoxes,
+                   vector<int>& initialBoxes) {
+
+        int n = status.size();
+        vector<bool> hasKey(n, false), visited(n, false);
+        queue<int> q;
+        int totalCandies = 0;
+
+        for (int box : initialBoxes) {
+            q.push(box);
+        }
+
+        while (!q.empty()) {
+            int size = q.size();
+            bool progress = false;
+
+            for (int i = 0; i < size; ++i) {
+                int box = q.front();
+                q.pop();
+
+                if (visited[box]) continue;
+
+                if (status[box] == 1 || hasKey[box]) {
+                    visited[box] = true;
+                    totalCandies += candies[box];
+
+                    // Add keys found inside this box
+                    for (int key : keys[box]) {
+                        hasKey[key] = true;
+                    }
+
+                    // Add contained boxes
+                    for (int b : containedBoxes[box]) {
+                        q.push(b);
+                    }
+
+                    // Important: अगर key मिली किसी बंद box की, तो वो future में खुल सकता है
+                    progress = true;
+                } else {
+                    // Retry later
+                    q.push(box);
+                }
+            }
+
+            // अगर progress नहीं हुआ यानी infinite loop से बचाओ
+            if (!progress) break;
+        }
+
+        return totalCandies;
+    }
+};
