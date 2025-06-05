@@ -1,0 +1,46 @@
+class Solution {
+public:
+    // Find function with path compression
+    int find(int x, vector<int>& parent) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x], parent);  // Path compression
+        return parent[x];
+    }
+
+    // Union function: always keep lex smallest as the parent
+    void unionSets(int x, int y, vector<int>& parent) {
+        int px = find(x, parent);
+        int py = find(y, parent);
+
+        if (px == py) return;
+
+        if (px < py)
+            parent[py] = px;  // smaller char becomes parent
+        else
+            parent[px] = py;
+    }
+
+    string smallestEquivalentString(string s1, string s2, string baseStr) {
+        // Initialize parent of each character to itself
+        vector<int> parent(26);
+        for (int i = 0; i < 26; ++i) {
+            parent[i] = i;
+        }
+
+        // Union all equivalent characters
+        for (int i = 0; i < s1.length(); ++i) {
+            int u = s1[i] - 'a';
+            int v = s2[i] - 'a';
+            unionSets(u, v, parent);
+        }
+
+        // Build the answer using the smallest equivalent for each character
+        string result;
+        for (char ch : baseStr) {
+            int smallest = find(ch - 'a', parent);
+            result += (char)(smallest + 'a');
+        }
+
+        return result;
+    }
+};
