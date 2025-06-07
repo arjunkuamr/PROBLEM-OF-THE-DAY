@@ -1,0 +1,27 @@
+class Solution {
+public:
+    string clearStars(string s) {
+        string res;
+        priority_queue<pair<char, int>, vector<pair<char, int>>, greater<>> pq;
+
+        for (char ch : s) {
+            if (ch == '*') {
+                while (!pq.empty()) {
+                    int idx = -pq.top().second;
+                    pq.pop();
+                    if (res[idx] != '#') {
+                        res[idx] = '#';
+                        break;
+                    }
+                }
+            } else {
+                pq.push({ch, -int(res.size())});
+                res += ch;
+            }
+        }
+
+        // Remove all '#' characters
+        res.erase(remove(res.begin(), res.end(), '#'), res.end());
+        return res;
+    }
+};
