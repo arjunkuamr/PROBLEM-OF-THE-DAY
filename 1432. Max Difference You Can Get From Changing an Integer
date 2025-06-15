@@ -1,0 +1,44 @@
+class Solution {
+public:
+    int maxDiff(int num) {
+        string s = to_string(num);
+        string max_s = s, min_s = s;
+
+        // Step 1: Maximize the number
+        // Replace the first digit that is not 9 with 9
+        for (char ch : s) {
+            if (ch != '9') {
+                char from = ch;
+                for (char &c : max_s) {
+                    if (c == from) c = '9';
+                }
+                break;
+            }
+        }
+
+        // Step 2: Minimize the number
+        // Case 1: First digit is not 1 → change it to 1
+        if (s[0] != '1') {
+            char from = s[0];
+            for (char &c : min_s) {
+                if (c == from) c = '1';
+            }
+        } else {
+            // Case 2: First digit is 1 → look for first digit (after s[0]) that's not 0 or 1 and change it to 0
+            for (int i = 1; i < s.size(); i++) {
+                if (s[i] != '0' && s[i] != '1') {
+                    char from = s[i];
+                    for (char &c : min_s) {
+                        if (c == from) c = '0';
+                    }
+                    break;
+                }
+            }
+        }
+
+        // Convert strings back to integers and return the difference
+        int max_num = stoi(max_s);
+        int min_num = stoi(min_s);
+        return max_num - min_num;
+    }
+};
