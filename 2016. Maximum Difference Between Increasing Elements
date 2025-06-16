@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maximumDifference(vector<int>& nums) {
+        int min_val = nums[0];   // अभी तक का सबसे छोटा element
+        int max_diff = -1;       // answer, शुरू में -1 रखा
+
+        for (int i = 1; i < nums.size(); ++i) {
+            if (nums[i] > min_val) {
+                // valid pair मिला, फर्क निकालो और max_diff update करो
+                max_diff = max(max_diff, nums[i] - min_val);
+            } else {
+                // नया छोटा element मिला, min_val update करो
+                min_val = nums[i];
+            }
+        }
+
+        return max_diff;
+    }
+};
