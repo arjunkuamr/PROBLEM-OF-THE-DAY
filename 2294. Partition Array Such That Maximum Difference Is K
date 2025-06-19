@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int partitionArray(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end()); // Step 1: Array ko sort karo
+        int count = 1; // Kam se kam ek group to hoga hi
+        int start = 0; // Pehla group yahan se start hoga
+
+        for(int i = 1; i < nums.size(); i++) {
+            if(nums[i] - nums[start] > k) {
+                count++;        // Naya group banayenge
+                start = i;      // Naye group ka start yeh hoga
+            }
+        }
+        return count;
+    }
+};
