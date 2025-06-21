@@ -1,0 +1,36 @@
+class Solution {
+public:
+    int maxDistance(string s, int k) {
+        int n = s.size();
+        int cntE = 0, cntW = 0, cntN = 0, cntS = 0;
+        int maxDist = 0;
+
+        for (int i = 0; i < n; ++i) {
+            char c = s[i];
+
+            if (c == 'E') cntE++;
+            else if (c == 'W') cntW++;
+            else if (c == 'N') cntN++;
+            else if (c == 'S') cntS++;
+
+            // Net displacement so far
+            int dx = cntE - cntW;
+            int dy = cntN - cntS;
+
+            int dist = abs(dx) + abs(dy);
+
+            // Maximum we can boost it using k changes:
+            // Each change can increase manhattan distance by at most 2
+            // (turn a cancelling move into supporting move)
+            int boost = 2 * min(k, i + 1); // i+1 steps done so far, max k changes allowed
+            int maxPossible = dist + boost;
+
+            // But max distance possible in i+1 steps is i+1
+            maxPossible = min(maxPossible, i + 1);
+
+            maxDist = max(maxDist, maxPossible);
+        }
+
+        return maxDist;
+    }
+};
