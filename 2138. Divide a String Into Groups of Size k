@@ -1,0 +1,20 @@
+class Solution {
+public:
+    vector<string> divideString(string s, int k, char fill) {
+        vector<string> result;
+        int n = s.size();
+
+        for (int i = 0; i < n; i += k) {
+            string temp = s.substr(i, k);  // k size ka group lo
+
+            // Agar group chhota hai to fill karo
+            while (temp.size() < k) {
+                temp += fill;
+            }
+
+            result.push_back(temp);  // group result mein daalo
+        }
+
+        return result;
+    }
+};
