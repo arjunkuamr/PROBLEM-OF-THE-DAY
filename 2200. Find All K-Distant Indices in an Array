@@ -1,0 +1,20 @@
+class Solution {
+public:
+    vector<int> findKDistantIndices(vector<int>& nums, int key, int k) {
+        vector<int> result;
+        int n = nums.size();
+
+        // Har index ko check karte hain
+        for (int i = 0; i < n; i++) {
+            // Check karte hain kya koi aisa index j hai jisme nums[j] == key aur |i-j| <= k
+            for (int j = max(0, i - k); j <= min(n - 1, i + k); j++) {
+                if (nums[j] == key) {
+                    result.push_back(i); // i ek valid index hai
+                    break; // ek mil gaya toh break kar do
+                }
+            }
+        }
+
+        return result;
+    }
+};
