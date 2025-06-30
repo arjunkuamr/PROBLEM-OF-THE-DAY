@@ -1,0 +1,27 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    int findLHS(vector<int>& nums) {
+        unordered_map<int, int> freq;
+
+        // हर नंबर की frequency गिनो
+        for (int num : nums) {
+            freq[num]++;
+        }
+
+        int maxLength = 0;
+
+        // हर key (number) के लिए देखो कि उसका +1 version exist करता है या नहीं
+        for (auto& pair : freq) {
+            int num = pair.first;
+            if (freq.count(num + 1)) {
+                // harmonious subsequence का length = freq[num] + freq[num + 1]
+                maxLength = max(maxLength, freq[num] + freq[num + 1]);
+            }
+        }
+
+        return maxLength;
+    }
+};
