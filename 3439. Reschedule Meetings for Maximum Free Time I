@@ -1,0 +1,39 @@
+class Solution {
+public:
+    int maxFreeTime(int eventTime, int k, vector<int>& startTime, vector<int>& endTime) {
+        int n = startTime.size();
+
+        // Step 1: Create a gap array of size n+1
+        vector<int> gap(n + 1);
+
+        // Before first meeting
+        gap[0] = startTime[0];
+
+        // Between meetings
+        for (int i = 1; i < n; i++) {
+            gap[i] = startTime[i] - endTime[i - 1];
+        }
+
+        // After last meeting
+        gap[n] = eventTime - endTime[n - 1];
+
+        // Step 2: Use sliding window of size k+1 to get max sum of gaps
+        int windowSize = k + 1;
+        int sum = 0;
+
+        // Initial window
+        for (int i = 0; i < windowSize && i <= n; i++) {
+            sum += gap[i];
+        }
+
+        int maxFree = sum;
+
+        // Slide the window
+        for (int i = windowSize; i <= n; i++) {
+            sum += gap[i] - gap[i - windowSize];
+            maxFree = max(maxFree, sum);
+        }
+
+        return maxFree;
+    }
+};
