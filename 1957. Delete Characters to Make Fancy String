@@ -1,0 +1,19 @@
+class Solution {
+public:
+    string makeFancyString(string s) {
+        string result = "";  // Final string jisme fancy string banegi
+
+        for (char c : s) {
+            int n = result.length();
+            
+            // Agar pichle 2 characters same hain aur current character bhi wahi hai
+            if (n >= 2 && result[n - 1] == c && result[n - 2] == c) {
+                continue; // To skip karo current character ko
+            }
+
+            result += c; // Otherwise, result mein add karo
+        }
+
+        return result; // Fancy string return karo
+    }
+};
