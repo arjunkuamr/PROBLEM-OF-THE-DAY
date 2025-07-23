@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int maximumGain(string s, int x, int y) {
+        // Step 1: Decide which substring has higher score
+        char ch1 = 'a', ch2 = 'b';
+        int high = x, low = y;
+
+        // If y > x, then prioritize "ba" first
+        if (y > x) {
+            swap(ch1, ch2);  // so ch1 = 'b', ch2 = 'a'
+            swap(high, low); // high becomes max(x, y)
+        }
+
+        // Step 2: First remove higher score substring
+        string temp;
+        int score = 0;
+
+        for (char c : s) {
+            if (!temp.empty() && temp.back() == ch1 && c == ch2) {
+                temp.pop_back();
+                score += high;
+            } else {
+                temp.push_back(c);
+            }
+        }
+
+        // Step 3: Now remove the second (lower score) substring
+        string finalStack;
+        for (char c : temp) {
+            if (!finalStack.empty() && finalStack.back() == ch2 && c == ch1) {
+                finalStack.pop_back();
+                score += low;
+            } else {
+                finalStack.push_back(c);
+            }
+        }
+
+        return score;
+    }
+};
