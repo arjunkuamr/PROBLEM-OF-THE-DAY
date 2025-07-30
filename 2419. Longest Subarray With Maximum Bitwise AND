@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int longestSubarray(vector<int>& nums) {
+        int maxVal = *max_element(nums.begin(), nums.end()); // Array ka sabse bada element
+        int maxLen = 0;   // Answer store karega
+        int currentLen = 0; // Current continuous maxVal length
+
+        for (int num : nums) {
+            if (num == maxVal) {
+                currentLen++; // maxVal mila to length badhao
+                maxLen = max(maxLen, currentLen); // max update karo
+            } else {
+                currentLen = 0; // beech me chhoti value aayi to reset
+            }
+        }
+
+        return maxLen;
+    }
+};
